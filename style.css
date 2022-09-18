@@ -2,6 +2,8 @@
     box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 @font-face {
     font-family: calculator;
     src: url(./fonts/Digital7-1e1Z.ttf);
@@ -11,20 +13,35 @@ body {
     height: 100vh;
     margin: 0;
     padding: 0;
+    background-color: #d6ebff;
+    font-family: 'Roboto', sans-serif;
 }
 
 button {
     background-color: #637587;
     color: #f2f6fa;
     font-size: 1.5rem;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.411);
 }
 
-/* Calculator Position */
+/* Calculator & Footer Position */
 
 #container {
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 4em;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    gap: 1em;
     align-items: center;
 }
 
