@@ -15,3 +15,20 @@ function multiply(a, b) {
 function divide(a, b) {
     return a / b;
 }
+
+//create operate function that takes an operator and calls a prior function on two numbers
+
+function operate(a, b, operator) {
+    switch (operator) {
+        case '+':
+            return add(a, b);
+        case '-':
+            return subtract(a, b);
+        case '*':
+            return multiply(a, b);
+        case '/':
+            return divide(a, b);
+        default:
+            console.log(`${operator} is not a valid operator, use ['+', '-', '*', or '/']`);
+    }
+}
