@@ -32,3 +32,23 @@ function operate(a, b, operator) {
             console.log(`${operator} is not a valid operator, use ['+', '-', '*', or '/']`);
     }
 }
+
+//create functions to populate display when number buttons are clicked, display value should be stored in variable
+
+const screenDisplay = document.querySelector('#lowerScreen');
+let displayValue = '';
+
+function numToDisplay() {
+    screenDisplay.textContent = displayValue += this.textContent;
+    console.log(this.textContent);
+    console.log(screenDisplay);
+}
+
+function updateDisplay() {
+    const numBtns = document.querySelectorAll('.numKey');
+    numBtns.forEach(btn => {
+        btn.addEventListener('click', numToDisplay);
+    })
+}
+
+updateDisplay();
