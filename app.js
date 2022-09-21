@@ -1,5 +1,27 @@
-//create add, subtract, multiply, and divide functions
+//Global variables for use in functions
+const upperScreen = document.querySelector('#upperScreen');
+const lowerScreen = document.querySelector('#lowerScreen');
 
+let currentoperator = '';
+let total = 0;
+let firstOperand = null;
+let secondOperand = null;
+let inputValue = '';
+
+//Define event listeners
+const operatorBtns = document.querySelectorAll('.arithmeticKey');
+const numBtns = document.querySelectorAll('.numKey');
+
+operatorBtns.forEach(btn => {
+    btn.addEventListener('click', calculate);
+})
+
+numBtns.forEach(btn => {
+    btn.addEventListener('click', lowerScreenDisplay);
+})
+
+
+//create add, subtract, multiply, and divide functions
 function add(a, b) {
     return a + b;
 }
@@ -16,9 +38,10 @@ function divide(a, b) {
     return a / b;
 }
 
-//create operate function that takes an operator and calls a prior function on two numbers
 
-function operate(a, b, operator) {
+//Function that takes an operator and calls a prior function on two numbers
+function arithmetic(a, b, operator) {
+
     switch (operator) {
         case '+':
             return add(a, b);
@@ -33,26 +56,33 @@ function operate(a, b, operator) {
     }
 }
 
-//create functions to populate display when number buttons are clicked, display value should be stored in variable
 
-const lowerScreenDisplay = document.querySelector('#lowerScreen');
-const upperScreenDisplay = document.querySelector('#upperScreen');
+//Function to pass to operator function() to evaluate if a second value is ready to be operated on
+function checkForTwoInputs(a, b, operator) {
+    if (a !== null && b !== null) {
+        total = arithmetic(a, b, operator);
+    }
+}
 
-let displayValue = '';
 
-function numToDisplay() {
-    if (displayValue.length > 9) {
+
+//Function to store two values and operator to pass to operate function
+function calculate() {
+    currentoperator = this.textContent.toLowerCase();
+    firstOperand = parseFloat(inputValue);
+    upperScreen.textContent = `${firstOperand} ${currentoperator}`;
+    inputValue = '';
+
+    console.log(currentoperator, total);
+    arithmetic(firstOperand, secondOperand, currentoperator);
+}
+
+
+//Function to generate numbers on bottom half of calculator screen
+function lowerScreenDisplay() {
+
+    if (inputValue.length > 9) {
         return;
     }
-    lowerScreenDisplay.textContent = displayValue += this.textContent;
-    console.log(this.textContent);
+    lowerScreen.textContent = inputValue += this.textContent;
 }
-
-function updateDisplay() {
-    const numBtns = document.querySelectorAll('.numKey');
-    numBtns.forEach(btn => {
-        btn.addEventListener('click', numToDisplay);
-    })
-}
-
-updateDisplay();
