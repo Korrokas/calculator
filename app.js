@@ -35,13 +35,17 @@ function operate(a, b, operator) {
 
 //create functions to populate display when number buttons are clicked, display value should be stored in variable
 
-const screenDisplay = document.querySelector('#lowerScreen');
+const lowerScreenDisplay = document.querySelector('#lowerScreen');
+const upperScreenDisplay = document.querySelector('#upperScreen');
+
 let displayValue = '';
 
 function numToDisplay() {
-    screenDisplay.textContent = displayValue += this.textContent;
+    if (displayValue.length > 9) {
+        return;
+    }
+    lowerScreenDisplay.textContent = displayValue += this.textContent;
     console.log(this.textContent);
-    console.log(screenDisplay);
 }
 
 function updateDisplay() {
