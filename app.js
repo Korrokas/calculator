@@ -1,26 +1,3 @@
-//Global variables for use in functions
-const upperScreen = document.querySelector('#upperScreen');
-const lowerScreen = document.querySelector('#lowerScreen');
-
-let currentoperator = '';
-let total = 0;
-let firstOperand = null;
-let secondOperand = null;
-let inputValue = '';
-
-//Define event listeners
-const operatorBtns = document.querySelectorAll('.arithmeticKey');
-const numBtns = document.querySelectorAll('.numKey');
-
-operatorBtns.forEach(btn => {
-    btn.addEventListener('click', calculate);
-})
-
-numBtns.forEach(btn => {
-    btn.addEventListener('click', lowerScreenDisplay);
-})
-
-
 //create add, subtract, multiply, and divide functions
 function add(a, b) {
     return a + b;
@@ -41,7 +18,6 @@ function divide(a, b) {
 
 //Function that takes an operator and calls a prior function on two numbers
 function arithmetic(a, b, operator) {
-
     switch (operator) {
         case '+':
             return add(a, b);
@@ -53,36 +29,88 @@ function arithmetic(a, b, operator) {
             return divide(a, b);
         default:
             console.log(`${operator} is not a valid operator, use ['+', '-', '*', or '/']`);
-    }
+        }
 }
 
+//Global variables for use in functions
+const upperScreen = document.querySelector('#upperScreen');
+const lowerScreen = document.querySelector('#lowerScreen');
 
-//Function to pass to operator function() to evaluate if a second value is ready to be operated on
-function checkForTwoInputs(a, b, operator) {
-    if (a !== null && b !== null) {
-        total = arithmetic(a, b, operator);
-    }
-}
+let InputValues = [];
+let operatorValues = [];
+let numInput = '';
 
 
+//Function to add functionality to buttons
+function addEventsToButtons() {
+    const operatorBtns = document.querySelectorAll('.arithmeticKey');
+    const numBtns = document.querySelectorAll('.numKey');
+    const negToPositive = document.querySelector('#unaryChange');
+    const clearBtn = document.querySelector('#clear');
+    const allClearBtn = document.querySelector('#allClear');
+        
+    operatorBtns.forEach(btn => {
+        btn.addEventListener('click', storeValues)
+        btn.addEventListener('click', upperScreenDisplay);
+        btn.addEventListener('click', clear);
+    })
+    
+    numBtns.forEach(btn => {
+        btn.addEventListener('click', lowerScreenDisplay);
+    })
 
-//Function to store two values and operator to pass to operate function
-function calculate() {
-    currentoperator = this.textContent.toLowerCase();
-    firstOperand = parseFloat(inputValue);
-    upperScreen.textContent = `${firstOperand} ${currentoperator}`;
-    inputValue = '';
+    negToPositive.addEventListener('click', unaryChange);
 
-    console.log(currentoperator, total);
-    arithmetic(firstOperand, secondOperand, currentoperator);
+    clearBtn.addEventListener('click', clear);
+    allClearBtn.addEventListener('click', allClear);
 }
 
 
 //Function to generate numbers on bottom half of calculator screen
 function lowerScreenDisplay() {
-
-    if (inputValue.length > 9) {
+    if (numInput.length > 9) {
         return;
     }
-    lowerScreen.textContent = inputValue += this.textContent;
+    lowerScreen.textContent = numInput += this.textContent;
 }
+
+
+//Function to push lower screen to upper screen and clear lower screen
+function upperScreenDisplay() {
+    upperScreen.textContent = `${numInput} ${this.textContent}`;
+}
+
+
+//Function to change value from positive to negative and vice versa
+function unaryChange() {
+        numInput *= -1;
+        lowerScreen.textContent = numInput;
+}
+
+
+function clear() {
+    numInput = '';
+    lowerScreen.textContent = numInput;
+}
+
+function allClear() {
+    numInput = '';
+    InputValues = [];
+    lowerScreen.textContent = numInput;
+    upperScreen.textContent = '';
+}
+
+
+//Function to store inputs into array
+function storeValues() {
+    if (numInput === null || numInput === '') {
+        return;
+    }
+    else {
+        InputValues.push(numInput);
+        console.log(InputValues);
+    }
+}
+
+clear();
+addEventsToButtons();
