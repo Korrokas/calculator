@@ -104,6 +104,7 @@ function unaryChange() {
 function allClear() {
     numInput = '';
     inputValues = [];
+    totalResult = null;
     lowerScreen.textContent = '';
     upperScreen.textContent = '';
 }
