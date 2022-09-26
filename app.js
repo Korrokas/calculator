@@ -31,9 +31,9 @@ numBtns.forEach(btn => {
 equalBtn.addEventListener('click', () => {
     isEqualKeyPressed = true;
     storeValues();
-    evaluateExpressions()
+    evaluateExpressions();
     isEqualKeyPressed = false;
-});
+})
 
 
 negToPositive.addEventListener('click', unaryChange);
@@ -44,8 +44,7 @@ allClearBtn.addEventListener('click', allClear);
 function storeValues() {
     if (numInput === null || numInput === '') {
         return;
-    }
-    else {
+    } else {
         inputValues.push(parseFloat(numInput));
         clear();
     }
@@ -54,6 +53,7 @@ function storeValues() {
 
 function storeOperator() {
     const operator = this.value;
+
     if (!(currentOperator === '')) {
         nextOperator = operator;
     } else {
@@ -65,9 +65,8 @@ function storeOperator() {
 function upperScreenDisplay(num1, num2, operator) {
     
     if (inputValues.length === 1) {
-        upperScreen.textContent = `${inputValues[0]} ${currentOperator}`
-''  }
-    else if (inputValues.length > 1) {
+        upperScreen.textContent = `${inputValues[0]} ${currentOperator}`;
+    } else if (inputValues.length > 1) {
         upperScreen.textContent = `${num1} ${operator} ${num2}`;
     }
 }
@@ -88,8 +87,17 @@ function clear() {
 
 
 function unaryChange() {
+    if (totalResult !== null) {
+        totalResult *= -1;
+        inputValues = [totalResult];
+        lowerScreen.textContent = totalResult;
+    } else if (numInput === '') {
+        numInput = -1;
+        lowerScreen.textContent = numInput;
+    } else {
         numInput *= -1;
         lowerScreen.textContent = numInput;
+    }
 }
 
 
