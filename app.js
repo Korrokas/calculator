@@ -9,6 +9,7 @@ const allClearBtn = document.querySelector('#allClear');
 
 let inputValues = [];
 let currentOperator = '';
+let nextOperator = '';
 let isEqualKeyPressed = false;
 let numInput = '';
 let totalResult = null;
@@ -53,15 +54,19 @@ function storeValues() {
 
 function storeOperator() {
     const operator = this.value;
-    currentOperator = operator;
+    if (!(currentOperator === '')) {
+        nextOperator = operator;
+    } else {
+        currentOperator = operator;
+    }
 }
 
 
 function upperScreenDisplay(num1, num2, operator) {
     
-    if (inputValues.length <= 1) {
+    if (inputValues.length === 1) {
         upperScreen.textContent = `${inputValues[0]} ${currentOperator}`
-    }
+''  }
     else if (inputValues.length > 1) {
         upperScreen.textContent = `${num1} ${operator} ${num2}`;
     }
@@ -97,11 +102,11 @@ function allClear() {
 
 
 function evaluateExpressions() {
-    if (!(currentOperator === null || currentOperator === '') || isEqualKeyPressed === true) {
-        console.log(inputValues);
+    if (!(currentOperator == '') || isEqualKeyPressed === true) {
         if (inputValues.length > 1) {
             upperScreenDisplay(inputValues[0], inputValues[1], currentOperator);
             totalResult = arithmetic(inputValues[0], inputValues[1], currentOperator);
+            currentOperator = nextOperator;
             inputValues = [totalResult];
             displayTotalResult(totalResult);
         }
@@ -110,11 +115,7 @@ function evaluateExpressions() {
 
 
 function displayTotalResult(result) {
-    if (result >= 1000000000) {
-        lowerScreen.textContent = result.toExponential();
-    } else {
         lowerScreen.textContent = result;
-    }
 }
 
 
