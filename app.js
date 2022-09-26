@@ -105,6 +105,8 @@ function allClear() {
     numInput = '';
     inputValues = [];
     totalResult = null;
+    currentOperator = '';
+    nextOperator = '';
     lowerScreen.textContent = '';
     upperScreen.textContent = '';
 }
@@ -116,6 +118,7 @@ function evaluateExpressions() {
             upperScreenDisplay(inputValues[0], inputValues[1], currentOperator);
             totalResult = arithmetic(inputValues[0], inputValues[1], currentOperator);
             currentOperator = nextOperator;
+            nextOperator = '';
             inputValues = [totalResult];
             displayTotalResult(totalResult);
         }
