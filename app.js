@@ -28,8 +28,8 @@ numBtns.forEach(btn => {
 
 
 equalBtn.addEventListener('click', () => {
-    storeValues();
     isEqualKeyPressed = true;
+    storeValues();
     evaluateExpressions()
     isEqualKeyPressed = false;
 });
@@ -54,19 +54,16 @@ function storeValues() {
 function storeOperator() {
     const operator = this.value;
     currentOperator = operator;
-    console.log(currentOperator);
 }
 
 
 function upperScreenDisplay(num1, num2, operator) {
     
-    if (inputValues.length === 1) {
+    if (inputValues.length <= 1) {
         upperScreen.textContent = `${inputValues[0]} ${currentOperator}`
     }
-    if (inputValues.length > 1) {
+    else if (inputValues.length > 1) {
         upperScreen.textContent = `${num1} ${operator} ${num2}`;
-    } else {
-        upperScreen.textContent = `${num1} ${operator}`;
     }
 }
 
