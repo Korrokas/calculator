@@ -7,18 +7,17 @@ const negToPositive = document.querySelector('#unaryChange');
 const clearBtn = document.querySelector('#clear');
 const allClearBtn = document.querySelector('#allClear');
 
-let InputValues = [];
+let inputValues = [];
 let currentOperator = '';
 let isEqualKeyPressed = false;
 let numInput = '';
-let result = null;
+let totalResult = null;
 
 
 operatorBtns.forEach(btn => {
     btn.addEventListener('click', storeValues);
     btn.addEventListener('click', storeOperator);
     btn.addEventListener('click', upperScreenDisplay);
-    btn.addEventListener('click', clear);
     btn.addEventListener('click', evaluateExpressions);
 })
 
@@ -29,11 +28,11 @@ numBtns.forEach(btn => {
 
 
 equalBtn.addEventListener('click', () => {
+    storeValues();
     isEqualKeyPressed = true;
     evaluateExpressions()
     isEqualKeyPressed = false;
 });
-
 
 
 negToPositive.addEventListener('click', unaryChange);
@@ -46,8 +45,8 @@ function storeValues() {
         return;
     }
     else {
-        InputValues.push(parseFloat(numInput));
-        console.log(InputValues);
+        inputValues.push(parseFloat(numInput));
+        clear();
     }
 }
 
@@ -59,12 +58,19 @@ function storeOperator() {
 }
 
 
-function upperScreenDisplay() {
-    upperScreen.textContent = `${numInput} ${this.value}`;
+function upperScreenDisplay(num1, num2, operator) {
+    
+    if (inputValues.length === 1) {
+        upperScreen.textContent = `${inputValues[0]} ${currentOperator}`
+    }
+    if (inputValues.length > 1) {
+        upperScreen.textContent = `${num1} ${operator} ${num2}`;
+    } else {
+        upperScreen.textContent = `${num1} ${operator}`;
+    }
 }
 
 
-//Function to generate numbers on bottom half of calculator screen
 function lowerScreenDisplay() {
     if (numInput.length > 9) {
         return;
@@ -75,7 +81,7 @@ function lowerScreenDisplay() {
 
 function clear() {
     numInput = '';
-    lowerScreen.textContent = numInput;
+    lowerScreen.textContent = '';
 }
 
 
@@ -87,18 +93,30 @@ function unaryChange() {
 
 function allClear() {
     numInput = '';
-    InputValues = [];
-    lowerScreen.textContent = numInput;
+    inputValues = [];
+    lowerScreen.textContent = '';
     upperScreen.textContent = '';
 }
 
 
 function evaluateExpressions() {
     if (!(currentOperator === null || currentOperator === '') || isEqualKeyPressed === true) {
-        console.log('testasdfasdfasfd');
-        if (InputValues.length > 1) {
-            arithmetic(InputValues[0], InputValues[1], currentOperator);
+        console.log(inputValues);
+        if (inputValues.length > 1) {
+            upperScreenDisplay(inputValues[0], inputValues[1], currentOperator);
+            totalResult = arithmetic(inputValues[0], inputValues[1], currentOperator);
+            inputValues = [totalResult];
+            displayTotalResult(totalResult);
         }
+    }
+}
+
+
+function displayTotalResult(result) {
+    if (result >= 1000000000) {
+        lowerScreen.textContent = result.toExponential();
+    } else {
+        lowerScreen.textContent = result;
     }
 }
 
@@ -127,6 +145,7 @@ function arithmetic(a, b, operator) {
         case '-':
             return subtract(a, b);
         case '*':
+        case 'x':
             return multiply(a, b);
         case '/':
             return divide(a, b);
