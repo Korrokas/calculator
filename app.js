@@ -1,4 +1,108 @@
-//create add, subtract, multiply, and divide functions
+const upperScreen = document.querySelector('#upperScreen');
+const lowerScreen = document.querySelector('#lowerScreen');
+const operatorBtns = document.querySelectorAll('.operatorKey');
+const numBtns = document.querySelectorAll('.numKey');
+const equalBtn = document.querySelector('#equals');
+const negToPositive = document.querySelector('#unaryChange');
+const clearBtn = document.querySelector('#clear');
+const allClearBtn = document.querySelector('#allClear');
+
+let InputValues = [];
+let currentOperator = '';
+let isEqualKeyPressed = false;
+let numInput = '';
+let result = null;
+
+
+operatorBtns.forEach(btn => {
+    btn.addEventListener('click', storeValues);
+    btn.addEventListener('click', storeOperator);
+    btn.addEventListener('click', upperScreenDisplay);
+    btn.addEventListener('click', clear);
+    btn.addEventListener('click', evaluateExpressions);
+})
+
+
+numBtns.forEach(btn => {
+    btn.addEventListener('click', lowerScreenDisplay);
+})
+
+
+equalBtn.addEventListener('click', () => {
+    isEqualKeyPressed = true;
+    evaluateExpressions()
+    isEqualKeyPressed = false;
+});
+
+
+
+negToPositive.addEventListener('click', unaryChange);
+clearBtn.addEventListener('click', clear);
+allClearBtn.addEventListener('click', allClear);
+
+
+function storeValues() {
+    if (numInput === null || numInput === '') {
+        return;
+    }
+    else {
+        InputValues.push(parseFloat(numInput));
+        console.log(InputValues);
+    }
+}
+
+
+function storeOperator() {
+    const operator = this.value;
+    currentOperator = operator;
+    console.log(currentOperator);
+}
+
+
+function upperScreenDisplay() {
+    upperScreen.textContent = `${numInput} ${this.value}`;
+}
+
+
+//Function to generate numbers on bottom half of calculator screen
+function lowerScreenDisplay() {
+    if (numInput.length > 9) {
+        return;
+    }
+    lowerScreen.textContent = numInput += this.textContent;
+}
+
+
+function clear() {
+    numInput = '';
+    lowerScreen.textContent = numInput;
+}
+
+
+function unaryChange() {
+        numInput *= -1;
+        lowerScreen.textContent = numInput;
+}
+
+
+function allClear() {
+    numInput = '';
+    InputValues = [];
+    lowerScreen.textContent = numInput;
+    upperScreen.textContent = '';
+}
+
+
+function evaluateExpressions() {
+    if (!(currentOperator === null || currentOperator === '') || isEqualKeyPressed === true) {
+        console.log('testasdfasdfasfd');
+        if (InputValues.length > 1) {
+            arithmetic(InputValues[0], InputValues[1], currentOperator);
+        }
+    }
+}
+
+
 function add(a, b) {
     return a + b;
 }
@@ -16,7 +120,6 @@ function divide(a, b) {
 }
 
 
-//Function that takes an operator and calls a prior function on two numbers
 function arithmetic(a, b, operator) {
     switch (operator) {
         case '+':
@@ -31,86 +134,3 @@ function arithmetic(a, b, operator) {
             console.log(`${operator} is not a valid operator, use ['+', '-', '*', or '/']`);
         }
 }
-
-//Global variables for use in functions
-const upperScreen = document.querySelector('#upperScreen');
-const lowerScreen = document.querySelector('#lowerScreen');
-
-let InputValues = [];
-let operatorValues = [];
-let numInput = '';
-
-
-//Function to add functionality to buttons
-function addEventsToButtons() {
-    const operatorBtns = document.querySelectorAll('.arithmeticKey');
-    const numBtns = document.querySelectorAll('.numKey');
-    const negToPositive = document.querySelector('#unaryChange');
-    const clearBtn = document.querySelector('#clear');
-    const allClearBtn = document.querySelector('#allClear');
-        
-    operatorBtns.forEach(btn => {
-        btn.addEventListener('click', storeValues)
-        btn.addEventListener('click', upperScreenDisplay);
-        btn.addEventListener('click', clear);
-    })
-    
-    numBtns.forEach(btn => {
-        btn.addEventListener('click', lowerScreenDisplay);
-    })
-
-    negToPositive.addEventListener('click', unaryChange);
-
-    clearBtn.addEventListener('click', clear);
-    allClearBtn.addEventListener('click', allClear);
-}
-
-
-//Function to generate numbers on bottom half of calculator screen
-function lowerScreenDisplay() {
-    if (numInput.length > 9) {
-        return;
-    }
-    lowerScreen.textContent = numInput += this.textContent;
-}
-
-
-//Function to push lower screen to upper screen and clear lower screen
-function upperScreenDisplay() {
-    upperScreen.textContent = `${numInput} ${this.textContent}`;
-}
-
-
-//Function to change value from positive to negative and vice versa
-function unaryChange() {
-        numInput *= -1;
-        lowerScreen.textContent = numInput;
-}
-
-
-function clear() {
-    numInput = '';
-    lowerScreen.textContent = numInput;
-}
-
-function allClear() {
-    numInput = '';
-    InputValues = [];
-    lowerScreen.textContent = numInput;
-    upperScreen.textContent = '';
-}
-
-
-//Function to store inputs into array
-function storeValues() {
-    if (numInput === null || numInput === '') {
-        return;
-    }
-    else {
-        InputValues.push(numInput);
-        console.log(InputValues);
-    }
-}
-
-clear();
-addEventsToButtons();
