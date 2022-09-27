@@ -7,6 +7,7 @@ const negToPositive = document.querySelector('#unaryChange');
 const clearBtn = document.querySelector('#clear');
 const allClearBtn = document.querySelector('#allClear');
 
+const validOperators = ['+', '-', '/', 'x', '*'];
 let inputValues = [];
 let currentOperator = '';
 let nextOperator = '';
@@ -15,16 +16,50 @@ let numInput = '';
 let totalResult = null;
 
 
+//Keyboard Support
+document.addEventListener('keyup', e => {
+    validOperators.forEach(symbol => {
+        if (e.key === symbol) {
+            storeValues();
+            storeOperator(e.key);
+            upperScreenDisplay();
+            evaluateExpressions();
+        }
+    })
+})
+
+
+document.addEventListener('keyup', e => {
+    if (e.key >= 0 && e.key < 10) {
+        lowerScreenDisplay(e.key);
+    }
+})
+
+document.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+        isEqualKeyPressed = true;
+        storeValues();
+        evaluateExpressions();
+        isEqualKeyPressed = false;
+    }
+})
+
+
+//Mouse Support
 operatorBtns.forEach(btn => {
-    btn.addEventListener('click', storeValues);
-    btn.addEventListener('click', storeOperator);
-    btn.addEventListener('click', upperScreenDisplay);
-    btn.addEventListener('click', evaluateExpressions);
+    btn.addEventListener('click', e => {
+        storeValues();
+        storeOperator(e.target.textContent)
+        upperScreenDisplay();
+        evaluateExpressions();
+    })
 })
 
 
 numBtns.forEach(btn => {
-    btn.addEventListener('click', lowerScreenDisplay);
+    btn.addEventListener('click', e => {
+        lowerScreenDisplay(e.target.textContent);
+    })
 })
 
 
@@ -51,9 +86,7 @@ function storeValues() {
 }
 
 
-function storeOperator() {
-    const operator = this.value;
-
+function storeOperator(operator) {
     if (!(currentOperator === '')) {
         nextOperator = operator;
     } else {
@@ -72,11 +105,12 @@ function upperScreenDisplay(num1, num2, operator) {
 }
 
 
-function lowerScreenDisplay() {
+function lowerScreenDisplay(num) {
+    
     if (numInput.length > 9) {
         return;
     }
-    lowerScreen.textContent = numInput += this.textContent;
+    lowerScreen.textContent = numInput += num;
 }
 
 
