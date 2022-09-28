@@ -7,7 +7,7 @@ const negToPositive = document.querySelector('#unaryChange');
 const clearBtn = document.querySelector('#clear');
 const allClearBtn = document.querySelector('#allClear');
 
-const validOperators = ['+', '-', '/', 'x', '*'];
+const validOperators = ['+', '-', '/', '*'];
 let inputValues = [];
 let currentOperator = '';
 let nextOperator = '';
@@ -21,7 +21,7 @@ document.addEventListener('keyup', e => {
     validOperators.forEach(symbol => {
         if (e.key === symbol) {
             storeValues();
-            storeOperator(e.key);
+            console.log(storeOperator(e.key));
             upperScreenDisplay();
             evaluateExpressions();
         }
@@ -77,7 +77,7 @@ allClearBtn.addEventListener('click', allClear);
 
 
 function storeValues() {
-    if (numInput === null || numInput === '') {
+    if (numInput === '') {
         return;
     } else {
         inputValues.push(parseFloat(numInput));
@@ -121,17 +121,18 @@ function clear() {
 
 
 function unaryChange() {
-    if (totalResult !== null) {
-        totalResult *= -1;
-        inputValues = [totalResult];
-        lowerScreen.textContent = totalResult;
-    } else if (numInput === '') {
-        numInput = -1;
-        lowerScreen.textContent = numInput;
-    } else {
-        numInput *= -1;
-        lowerScreen.textContent = numInput;
-    }
+
+    // if (totalResult !== null) {
+    //     totalResult *= -1;
+    //     inputValues = [totalResult];
+    //     lowerScreen.textContent = totalResult;
+    // }  if (numInput === '') {
+    //     numInput = -1;
+    //     lowerScreen.textContent = numInput;
+    // } else if (typeof numInput === "number") {
+    //     numInput *= -1;
+    //     lowerScreen.textContent = numInput;
+    // }
 }
 
 
@@ -151,6 +152,7 @@ function evaluateExpressions() {
         if (inputValues.length > 1) {
             upperScreenDisplay(inputValues[0], inputValues[1], currentOperator);
             totalResult = arithmetic(inputValues[0], inputValues[1], currentOperator);
+            totalResult = Math.round(totalResult * 100) / 100;
             currentOperator = nextOperator;
             nextOperator = '';
             inputValues = [totalResult];
@@ -190,8 +192,10 @@ function arithmetic(a, b, operator) {
             return subtract(a, b);
         case '*':
         case 'x':
+        case 'X':
             return multiply(a, b);
         case '/':
+        case '÷':
             return divide(a, b);
         default:
             console.log(`${operator} is not a valid operator, use ['+', '-', '*', or '/']`);
