@@ -4,7 +4,7 @@ const operatorBtns = document.querySelectorAll('.operatorKey');
 const numBtns = document.querySelectorAll('.numKey');
 const equalBtn = document.querySelector('#equals');
 const negToPositive = document.querySelector('#unaryChange');
-const allClearBtn = document.querySelector('#clear');
+const allClearBtn = document.querySelector('#allClear');
 
 const validOperators = ['+', '-', '/', '*'];
 let currentOperator = '';
@@ -45,6 +45,9 @@ document.addEventListener('keyup', e => {
 
 document.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
+        allClearBtn.addEventListener('click', () => {
+            equalBtn.focus();
+        })
         storeValues();
         isEqualKeyPressed = true;
         evaluateExpressions();
@@ -80,7 +83,12 @@ equalBtn.addEventListener('click', () => {
 
 
 negToPositive.addEventListener('click', unaryChange);
+
 allClearBtn.addEventListener('click', resetData);
+allClearBtn.addEventListener('keyup', e => {
+    e.preventDefault();
+    return false;
+})
 
 
 //Function Definitions
