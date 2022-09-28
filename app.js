@@ -4,24 +4,28 @@ const operatorBtns = document.querySelectorAll('.operatorKey');
 const numBtns = document.querySelectorAll('.numKey');
 const equalBtn = document.querySelector('#equals');
 const negToPositive = document.querySelector('#unaryChange');
-const clearBtn = document.querySelector('#clear');
-const allClearBtn = document.querySelector('#allClear');
+const allClearBtn = document.querySelector('#clear');
 
 const validOperators = ['+', '-', '/', '*'];
-let inputValues = [];
 let currentOperator = '';
-let nextOperator = '';
-let isEqualKeyPressed = false;
-let numInput = '';
+let input = '';
+let firstOperand = null;
+let secondOperand = null;
 let totalResult = null;
+let isEqualKeyPressed = false;
+let defaultDisplay = '0';
+
+
+//Initial Display
+lowerScreen.textContent = defaultDisplay;
 
 
 //Keyboard Support
 document.addEventListener('keyup', e => {
     validOperators.forEach(symbol => {
         if (e.key === symbol) {
+            currentOperator = e.key;
             storeValues();
-            console.log(storeOperator(e.key));
             upperScreenDisplay();
             evaluateExpressions();
         }
@@ -30,15 +34,19 @@ document.addEventListener('keyup', e => {
 
 
 document.addEventListener('keyup', e => {
-    if (e.key >= 0 && e.key < 10) {
+    if (e.key >= 0 && e.key < 10 || e.key === '.') {
+        if (e.key === '.' && lowerScreen.textContent.includes('.')) {
+            return;
+        }
         lowerScreenDisplay(e.key);
     }
 })
 
+
 document.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
-        isEqualKeyPressed = true;
         storeValues();
+        isEqualKeyPressed = true;
         evaluateExpressions();
         isEqualKeyPressed = false;
     }
@@ -48,8 +56,8 @@ document.addEventListener('keyup', e => {
 //Mouse Support
 operatorBtns.forEach(btn => {
     btn.addEventListener('click', e => {
+        currentOperator = e.target.textContent;
         storeValues();
-        storeOperator(e.target.textContent)
         upperScreenDisplay();
         evaluateExpressions();
     })
@@ -72,34 +80,28 @@ equalBtn.addEventListener('click', () => {
 
 
 negToPositive.addEventListener('click', unaryChange);
-clearBtn.addEventListener('click', clear);
-allClearBtn.addEventListener('click', allClear);
+allClearBtn.addEventListener('click', resetData);
 
 
+//Function Definitions
 function storeValues() {
-    if (numInput === '') {
+    if (input === '') {
         return;
-    } else {
-        inputValues.push(parseFloat(numInput));
+    } else if (firstOperand === null) {
+        firstOperand = input;
         clear();
-    }
-}
-
-
-function storeOperator(operator) {
-    if (!(currentOperator === '')) {
-        nextOperator = operator;
     } else {
-        currentOperator = operator;
+        secondOperand = input;
+        clear();
     }
 }
 
 
 function upperScreenDisplay(num1, num2, operator) {
     
-    if (inputValues.length === 1) {
-        upperScreen.textContent = `${inputValues[0]} ${currentOperator}`;
-    } else if (inputValues.length > 1) {
+    if (secondOperand === null) {
+        upperScreen.textContent = `${firstOperand} ${currentOperator}`;
+    } else if (secondOperand !== null) {
         upperScreen.textContent = `${num1} ${operator} ${num2}`;
     }
 }
@@ -107,16 +109,27 @@ function upperScreenDisplay(num1, num2, operator) {
 
 function lowerScreenDisplay(num) {
     
-    if (numInput.length > 9) {
+    if (input.length > 9) {
         return;
     }
-    lowerScreen.textContent = numInput += num;
+    lowerScreen.textContent = input += num;
 }
 
 
 function clear() {
-    numInput = '';
+    input = '';
     lowerScreen.textContent = '';
+}
+
+
+function resetData() {
+    currentOperator = '';
+    input = '';
+    firstOperand = null;
+    secondOperand = null;
+    totalResult = null;
+    lowerScreen.textContent = defaultDisplay;
+    upperScreen.textContent = '';
 }
 
 
@@ -124,40 +137,39 @@ function unaryChange() {
 
     // if (totalResult !== null) {
     //     totalResult *= -1;
-    //     inputValues = [totalResult];
+    //     operands = [totalResult];
     //     lowerScreen.textContent = totalResult;
-    // }  if (numInput === '') {
-    //     numInput = -1;
-    //     lowerScreen.textContent = numInput;
-    // } else if (typeof numInput === "number") {
-    //     numInput *= -1;
-    //     lowerScreen.textContent = numInput;
+    // }  if (input === '') {
+    //     input = -1;
+    //     lowerScreen.textContent = input;
+    // } else if (typeof input === "number") {
+    //     input *= -1;
+    //     lowerScreen.textContent = input;
     // }
 }
 
 
-function allClear() {
-    numInput = '';
-    inputValues = [];
-    totalResult = null;
-    currentOperator = '';
-    nextOperator = '';
-    lowerScreen.textContent = '';
-    upperScreen.textContent = '';
+function evaluateExpressions() {
+    if (currentOperator !== '' || isEqualKeyPressed === true) {
+        if (firstOperand !== null && secondOperand !== null) {
+            upperScreenDisplay(firstOperand, secondOperand, currentOperator);
+            totalResult = arithmetic(parseFloat(firstOperand), parseFloat(secondOperand), currentOperator);
+            totalResult = formatTotalResult(totalResult);
+            firstOperand = totalResult;
+            secondOperand = null;
+            displayTotalResult(totalResult);
+        }
+    }
 }
 
 
-function evaluateExpressions() {
-    if (!(currentOperator == '') || isEqualKeyPressed === true) {
-        if (inputValues.length > 1) {
-            upperScreenDisplay(inputValues[0], inputValues[1], currentOperator);
-            totalResult = arithmetic(inputValues[0], inputValues[1], currentOperator);
-            totalResult = Math.round(totalResult * 100) / 100;
-            currentOperator = nextOperator;
-            nextOperator = '';
-            inputValues = [totalResult];
-            displayTotalResult(totalResult);
-        }
+function formatTotalResult(result) {
+    const roundResult = Math.round(result * 100) / 100;
+
+    if (roundResult > 1000000) {
+        return roundResult.toExponential(2);
+    } else {
+        return roundResult;
     }
 }
 
