@@ -4,6 +4,7 @@ const operatorBtns = document.querySelectorAll('.operatorKey');
 const numBtns = document.querySelectorAll('.numKey');
 const equalBtn = document.querySelector('#equals');
 const negToPositive = document.querySelector('#unaryChange');
+const percentBtn = document.querySelector('#percent');
 const allClearBtn = document.querySelector('#allClear');
 
 const validOperators = ['+', '-', '/', '*'];
@@ -83,12 +84,8 @@ equalBtn.addEventListener('click', () => {
 
 
 negToPositive.addEventListener('click', unaryChange);
-
+percentBtn.addEventListener('click', numberToDecimal);
 allClearBtn.addEventListener('click', resetData);
-allClearBtn.addEventListener('keyup', e => {
-    e.preventDefault();
-    return false;
-})
 
 
 //Function Definitions
@@ -96,10 +93,10 @@ function storeValues() {
     if (input === '') {
         return;
     } else if (firstOperand === null) {
-        firstOperand = input;
+        firstOperand = parseFloat(input);
         clear();
     } else {
-        secondOperand = input;
+        secondOperand = parseFloat(input);
         clear();
     }
 }
@@ -119,8 +116,9 @@ function lowerScreenDisplay(num) {
     
     if (input.length > 9) {
         return;
-    }
-    lowerScreen.textContent = input += num;
+    } 
+    input += num;
+    lowerScreen.textContent = input;
 }
 
 
@@ -142,18 +140,13 @@ function resetData() {
 
 
 function unaryChange() {
+    
+}
 
-    // if (totalResult !== null) {
-    //     totalResult *= -1;
-    //     operands = [totalResult];
-    //     lowerScreen.textContent = totalResult;
-    // }  if (input === '') {
-    //     input = -1;
-    //     lowerScreen.textContent = input;
-    // } else if (typeof input === "number") {
-    //     input *= -1;
-    //     lowerScreen.textContent = input;
-    // }
+
+function numberToDecimal() {
+    input = parseFloat(input) / 100;
+    lowerScreen.textContent = input;
 }
 
 
@@ -161,7 +154,7 @@ function evaluateExpressions() {
     if (currentOperator !== '' || isEqualKeyPressed === true) {
         if (firstOperand !== null && secondOperand !== null) {
             upperScreenDisplay(firstOperand, secondOperand, currentOperator);
-            totalResult = arithmetic(parseFloat(firstOperand), parseFloat(secondOperand), currentOperator);
+            totalResult = arithmetic(firstOperand, secondOperand, currentOperator);
             totalResult = formatTotalResult(totalResult);
             firstOperand = totalResult;
             secondOperand = null;
