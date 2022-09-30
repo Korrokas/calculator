@@ -46,9 +46,6 @@ document.addEventListener('keyup', e => {
 
 document.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
-        allClearBtn.addEventListener('click', () => {
-            equalBtn.focus();
-        })
         storeValues();
         isEqualKeyPressed = true;
         evaluateExpressions();
@@ -136,11 +133,20 @@ function resetData() {
     totalResult = null;
     lowerScreen.textContent = defaultDisplay;
     upperScreen.textContent = '';
+    allClearBtn.blur();
 }
 
 
 function unaryChange() {
-    
+    if (input === '' || input === '0') {
+        input = '-';
+        lowerScreen.textContent = input;
+    } else {
+        let signChange = input;
+        signChange *= -1;
+        input = signChange;
+        lowerScreen.textContent = input;
+    }
 }
 
 
