@@ -141,10 +141,10 @@ function unaryChange() {
     if (input === '' || input === '0') {
         input = '-';
         lowerScreen.textContent = input;
+    } else if (input === '-') {
+        input = '';
     } else {
-        let signChange = input;
-        signChange *= -1;
-        input = signChange;
+        input *= -1;
         lowerScreen.textContent = input;
     }
 }
