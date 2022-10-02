@@ -150,8 +150,9 @@ function unaryChange() {
         input = '';
     } else {
         input *= -1;
+        input = formatBigNumbers(input);
     }
-    lowerScreen.textContent = formatBigNumbers(input);
+    lowerScreen.textContent = input;
 }
 
 
@@ -162,7 +163,8 @@ function numberToDecimal() {
     } else if (input !== '') {
         input = parseFloat(input) / 100;
     }
-    lowerScreen.textContent = formatBigNumbers(input);
+    input = formatBigNumbers(input);
+    lowerScreen.textContent = input;
 }
 
 
@@ -190,10 +192,12 @@ function evaluateExpressions() {
 
 
 function formatBigNumbers(num) {
-    if (num > 1000000 || num < -1000000) {
-        return num.toExponential(2);
+    let roundNumber = Math.ceil(num * 100000) / 100000;
+
+    if (roundNumber > 1000000 || roundNumber < -1000000) {
+        return roundNumber.toExponential(2);
     } else {
-        return num;
+        return roundNumber;
     }
 }
 
