@@ -140,40 +140,48 @@ function resetData() {
 function unaryChange() {
     if (input === '' || input === '0') {
         input = '-';
-        lowerScreen.textContent = input;
     } else if (input === '-') {
         input = '';
     } else {
         input *= -1;
-        lowerScreen.textContent = input;
     }
+    lowerScreen.textContent = input;
 }
 
 
 function numberToDecimal() {
-    input = parseFloat(input) / 100;
+    if (input === '' && firstOperand !== null) {
+        firstOperand = parseFloat(firstOperand) / 100;
+        input = firstOperand;
+    } else if (input !== '') {
+        input = parseFloat(input) / 100;
+    }
     lowerScreen.textContent = input;
 }
 
 
 function evaluateExpressions() {
     if (currentOperator !== '' || isEqualKeyPressed === true) {
-        if (firstOperand !== null && secondOperand !== null) {
-            upperScreenDisplay(firstOperand, secondOperand, currentOperator);
-            totalResult = arithmetic(firstOperand, secondOperand, currentOperator);
-            totalResult = formatTotalResult(totalResult);
-            firstOperand = totalResult;
-            secondOperand = null;
-            displayTotalResult(totalResult);
+        if (currentOperator === '') {
+            return;
+        } else {
+            if (firstOperand !== null && secondOperand !== null) {
+                upperScreenDisplay(firstOperand, secondOperand, currentOperator);
+                totalResult = arithmetic(firstOperand, secondOperand, currentOperator);
+                totalResult = formatTotalResult(totalResult);
+                firstOperand = totalResult;
+                secondOperand = null;
+                displayTotalResult(totalResult);
+            }
         }
     }
 }
 
 
 function formatTotalResult(result) {
-    const roundResult = Math.round(result * 100) / 100;
+    let roundResult = Math.round(result * 10000) / 10000;
 
-    if (roundResult > 1000000) {
+    if (roundResult > 1000000 || roundResult < 0.0001) {
         return roundResult.toExponential(2);
     } else {
         return roundResult;
