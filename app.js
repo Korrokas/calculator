@@ -168,10 +168,15 @@ function evaluateExpressions() {
             if (firstOperand !== null && secondOperand !== null) {
                 upperScreenDisplay(firstOperand, secondOperand, currentOperator);
                 totalResult = arithmetic(firstOperand, secondOperand, currentOperator);
-                totalResult = formatTotalResult(totalResult);
-                firstOperand = totalResult;
-                secondOperand = null;
-                displayTotalResult(totalResult);
+                if (totalResult === undefined) {
+                    input = '';
+                    return;
+                } else {
+                    totalResult = formatTotalResult(totalResult);
+                    firstOperand = totalResult;
+                    secondOperand = null;
+                    displayTotalResult(totalResult);
+                }
             }
         }
     }
@@ -223,6 +228,10 @@ function arithmetic(a, b, operator) {
             return multiply(a, b);
         case '/':
         case '÷':
+            if (b === 0) {
+                lowerScreen.textContent = "div/0 ERROR";
+                return;
+            }
             return divide(a, b);
         default:
             console.log(`${operator} is not a valid operator, use ['+', '-', '*', or '/']`);
