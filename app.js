@@ -39,7 +39,7 @@ document.addEventListener('keyup', e => {
         if (e.key === '.' && lowerScreen.textContent.includes('.')) {
             return;
         }
-        lowerScreenDisplay(e.key);
+        lowerScreenNumbers(e.key);
     }
 })
 
@@ -67,7 +67,7 @@ operatorBtns.forEach(btn => {
 
 numBtns.forEach(btn => {
     btn.addEventListener('click', e => {
-        lowerScreenDisplay(e.target.textContent);
+        lowerScreenNumbers(e.target.textContent);
     })
 })
 
@@ -96,10 +96,10 @@ function storeValues() {
     } else if (input === '-') {
         return;
     } else if (firstOperand === null) {
-        firstOperand = parseFloat(input);
+        firstOperand = formatBigNumbers(parseFloat(input));
         clear();
     } else {
-        secondOperand = parseFloat(input);
+        secondOperand = formatBigNumbers(parseFloat(input));
         clear();
     }
 }
@@ -115,7 +115,7 @@ function upperScreenDisplay(num1, num2, operator) {
 }
 
 
-function lowerScreenDisplay(num) {
+function lowerScreenNumbers(num) {
     
     if (input.length > 9) {
         return;
@@ -151,7 +151,7 @@ function unaryChange() {
     } else {
         input *= -1;
     }
-    lowerScreen.textContent = input;
+    lowerScreen.textContent = formatBigNumbers(input);
 }
 
 
@@ -162,7 +162,7 @@ function numberToDecimal() {
     } else if (input !== '') {
         input = parseFloat(input) / 100;
     }
-    lowerScreen.textContent = input;
+    lowerScreen.textContent = formatBigNumbers(input);
 }
 
 
@@ -178,10 +178,10 @@ function evaluateExpressions() {
                     input = '';
                     return;
                 } else {
-                    totalResult = formatTotalResult(totalResult);
+                    totalResult = formatBigNumbers(totalResult);
                     firstOperand = totalResult;
                     secondOperand = null;
-                    displayTotalResult(totalResult);
+                    lowerScreen.textContent = totalResult;
                 }
             }
         }
@@ -189,19 +189,12 @@ function evaluateExpressions() {
 }
 
 
-function formatTotalResult(result) {
-    let roundResult = Math.round(result * 10000) / 10000;
-
-    if (roundResult > 1000000 || roundResult < 0.0001) {
-        return roundResult.toExponential(2);
+function formatBigNumbers(num) {
+    if (num > 1000000 || num < -1000000) {
+        return num.toExponential(2);
     } else {
-        return roundResult;
+        return num;
     }
-}
-
-
-function displayTotalResult(result) {
-        lowerScreen.textContent = result;
 }
 
 
