@@ -88,6 +88,12 @@ allClearBtn.addEventListener('click', resetData);
 //Function Definitions
 function storeValues() {
     if (input === '') {
+        if (firstOperand === null) {
+            firstOperand = 0;
+        } else {
+            return;
+        }
+    } else if (input === '-') {
         return;
     } else if (firstOperand === null) {
         firstOperand = parseFloat(input);
